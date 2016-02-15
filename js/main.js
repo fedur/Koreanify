@@ -1,5 +1,7 @@
 (function() {
-	var jamoInterface = require('./Jamo');
+	var Jamo = require('./Jamo');
+	var jamoInterface = new Jamo();
+	console.log(jamoInterface);
 	$( "#userInput" ).bind( "input", function() {
 
 		var whiteSpaceReg = /\s(?=[a-zA-Z]+)/;
@@ -27,7 +29,7 @@
 		for (word of splitWords) {		
 			var currentWord = "";
 			for (syllable of word) {
-				var result = jamoInterface.getRegex.exec(syllable);
+				var result = jamoInterface.getRegex().exec(syllable);
 				var unicode = jamoInterface.createSyllable(result[1], result[2], result[3]);
 				
 				if (unicode > 0) //If there's no error...

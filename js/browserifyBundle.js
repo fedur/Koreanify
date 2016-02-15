@@ -2,29 +2,48 @@
 var console = require("console-browserify");
 var JamoCodes = require('./jamoDb');
 
-validLetters = [];
-validLetters.push(getSortedArrayFromKeys(JamoCodes.initial));
-validLetters.push(getSortedArrayFromKeys(JamoCodes.medial));
-validLetters.push(getSortedArrayFromKeys(JamoCodes.terminal));
+function Jamo() { // Jamo Constructor
 
-var regexString = "";
-
-for (i = 0; i<validLetters.length; i++) {
-    regexString += "("; // Starts the set representing all valid characters that can form a Jamo
-
-    for (j = 0; j<validLetters[i].length; j++) {
-        regexString += "(?:" + validLetters[i][j] + ")";
-        if (j != validLetters[i].length -1)
-            regexString += "|";
+    if (!(this instanceof Jamo)) {
+    return new Jamo();
     }
 
-    regexString += ")"; // Ends the set representing all the characters forming a Jamo.
-    regexString += "?"; // Matching the Jamo 0 or 1 times 
-}
+    // We get all the valid romanized english to Korean letter possibilities
+    /* This will be later done using an external db, right now, it's only fetching from JamoDb 
+        which right now is just storing the valid letters in an object */
 
-exports.getRegex = new RegExp(regexString);
+    validLetters = []; // validLetters[InitialOrMedialOrFinal][TheLetters]
+    validLetters.push(getSortedArrayFromKeys(JamoCodes.initial));
+    validLetters.push(getSortedArrayFromKeys(JamoCodes.medial));
+    validLetters.push(getSortedArrayFromKeys(JamoCodes.terminal));
 
-exports.createSyllable = function(initialJ, medialJ, terminalJ) {
+    var regexString = "";
+
+    for (i = 0; i<validLetters.length; i++) { 
+        regexString += "("; // Starts the set representing all valid characters that can form a Jamo
+
+        for (j = 0; j<validLetters[i].length; j++) { // Adds all letters that can form the jamo
+            regexString += "(?:" + validLetters[i][j] + ")";
+            if (j != validLetters[i].length -1)
+                regexString += "|";
+        }
+
+        regexString += ")"; // Ends the set representing all the characters forming a Jamo.
+        regexString += "?"; // Matching the Jamo 0 or 1 times, since we can have letters like 'a' that has no initial nor final jamo.
+    }
+
+    this.regexString = new RegExp(regexString);
+
+};
+
+Jamo.prototype.cave = "cave";
+
+Jamo.prototype.getRegex = function () {
+    return this.regexString;
+};
+
+
+Jamo.prototype.createSyllable = function(initialJ, medialJ, terminalJ) {
     if (initialJ == undefined) 
         initialJ = 11; //Empty Character -> ㅇ
     else
@@ -42,6 +61,8 @@ exports.createSyllable = function(initialJ, medialJ, terminalJ) {
 
     return initialJ*588+medialJ*28+terminalJ+44032
 }
+
+module.exports = Jamo;
 
 
 function getSortedArrayFromKeys(obj) {
@@ -129,7 +150,9 @@ exports.terminal =  {
 
 },{}],3:[function(require,module,exports){
 (function() {
-	var jamoInterface = require('./Jamo');
+	var Jamo = require('./Jamo');
+	var jamoInterface = new Jamo();
+	console.log(jamoInterface);
 	$( "#userInput" ).bind( "input", function() {
 
 		var whiteSpaceReg = /\s(?=[a-zA-Z]+)/;
@@ -157,7 +180,7 @@ exports.terminal =  {
 		for (word of splitWords) {		
 			var currentWord = "";
 			for (syllable of word) {
-				var result = jamoInterface.getRegex.exec(syllable);
+				var result = jamoInterface.getRegex().exec(syllable);
 				var unicode = jamoInterface.createSyllable(result[1], result[2], result[3]);
 				
 				if (unicode > 0) //If there's no error...
