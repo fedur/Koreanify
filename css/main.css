@@ -1,0 +1,35 @@
+body {
+  padding-top: 50px;
+}
+.default {
+  padding: 10px 15px;
+}
+
+.title {
+  text-align: center;
+}
+
+input[type=text]
+{
+	width: 100%;
+	max-width: 800px;
+	text-align: center;
+}
+
+
+.result
+{
+	text-align: center;
+	max-width: 800px;
+	font-size: 18px;
+}
+
+#resultText
+{
+	color: #0052cc;
+}
+
+#clipboard
+{
+	font-size: 12px;
+}
