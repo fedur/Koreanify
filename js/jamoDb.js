@@ -15,7 +15,7 @@ exports.initial = {
 	j : 12,
 	jj : 13,
 	c : 14,
-	kk : 15,
+	k : 15,
 	t : 16,
 	p : 17,
 	h : 18

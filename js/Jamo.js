@@ -2,7 +2,7 @@ var console = require("console-browserify");
 var JamoCodes = require('./jamoDb');
 
 function Jamo() { // Jamo Constructor
-
+    console.log(JamoCodes);
     if (!(this instanceof Jamo)) {
     return new Jamo();
     }

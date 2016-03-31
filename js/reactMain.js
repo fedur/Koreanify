@@ -3,6 +3,14 @@ var jamoInterface = new Jamo();
 var ReactDOM = require('react-dom');
 var React = require('react');
 
+var valid = {
+	color: 'blue'
+}
+
+var inValid = {
+	color: 'red'
+}
+
 var Input = React.createClass({
 	getInitialState: function() {
 		return {userText: "SeonSaengNim"};
@@ -16,26 +24,17 @@ var Input = React.createClass({
 		return (
 			<div>
 				<input id="userInput" type="text" onChange={this.updateText} value = {this.state.userText}/>
-				<TranslatedResultBox userText={this.state.userText} />
+				<TranslatedResultBox userText={this.state.userText} language="Hangul" />
 			</div>
 		);
 	}
 });
 
 var TranslatedResultBox = React.createClass({
-	getInitialState: function() {
-		return({
-			language: "Hangul",
-			result: ""
-		});
-	},
 
 	translateInput: function() {
-
-		this.state.result = ""; // Reset the result.
-
 		var wordsSplitInSyllables = this.splitWordsInSyllables(this.props.userText);
-
+		var translation = "";
 		for (word of wordsSplitInSyllables) {		
 			var currentWord = "";
 			for (syllable of word) {
@@ -45,10 +44,31 @@ var TranslatedResultBox = React.createClass({
 				if (unicode > 0) //If there's no error...
 					currentWord += String.fromCharCode(unicode); 
 			}
-			this.state.result += (currentWord + " ");		
+			translation += (currentWord + " ");		
 		}
-
-		
+		return translation;
+	},
+	formatInput: function() {
+		var wordsSplitInSyllables = this.splitWordsInSyllables(this.props.userText);
+		var formattedInput = [];
+		for (word of wordsSplitInSyllables) {		
+			var currentWord = "";
+			for (syllable of word) {
+				var result = jamoInterface.getRegex().exec(syllable);
+				var unicode = jamoInterface.createSyllable(result[1], result[2], result[3]);
+				
+				if (unicode > 0) { //If there's no error
+					formattedInput.push(<span style={valid}>{syllable}</span>);
+				}
+				else {
+					formattedInput.push(<span style={inValid}>{syllable}</span>);
+				}
+				
+				//White space
+				formattedInput.push(<span> </span>);
+			}
+		}
+		return formattedInput;
 	},
 
 	splitWordsInSyllables: function(inputStream) {
@@ -76,12 +96,12 @@ var TranslatedResultBox = React.createClass({
 	},
 
 	render: function() {
-		this.translateInput();
 		return(
 		<div className="container default result">
           <div className="row">
-            <div className="col-xs-6">{this.state.language} : </div>
-            <div className="col-xs-6">{this.state.result} </div>
+            <div className="col-xs-5">{this.formatInput()} </div>
+            <div className="col-xs-2">{"=>"} </div>
+            <div className="col-xs-5">{this.translateInput()} </div>
           </div>
       </div>
       );
