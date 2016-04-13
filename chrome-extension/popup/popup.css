@@ -1,0 +1,40 @@
+body {
+  font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+  width: 350px;
+  text-align: left;
+}
+
+h1
+{
+	font-size: 15px;
+	font-weight: bold;
+	text-align: center;
+}
+
+h4 {
+	font-size: 14px;
+	font-weight: normal;
+	text-decoration: underline;
+}
+
+.subTitle{
+	font-style: italic;
+	font-size: 12px;
+	text-decoration: underline;
+}
+
+.korean {
+	font-size: 14px;
+}
+
+.content{
+	font-style: 11px;
+}
+
+#info {
+	/*
+  white-space: normal;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 900px; */
+}

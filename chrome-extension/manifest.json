@@ -1,0 +1,28 @@
+{
+	"manifest_version": 2,
+
+	"name": "Koreanify",
+	"description": "This enables you to translate a romanized korean sentence into Hangul.",
+	"version": "1.0",
+
+	"browser_action": {
+		"default_icon": "icon.png",
+		"default_popup": "popup/popup.html"
+	},
+
+	"background": {
+		"scripts": ["background.js"],
+	    "persistent": false
+    },
+
+	"commands": {
+		"translate_text": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+K",
+				"linux": "Ctrl+Shift+K"
+			},
+
+			"description": "Translates your romanized text into Hangul."
+		}
+	}
+}
